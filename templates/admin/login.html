@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Kirish</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f1f5f9; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.card { background: #fff; border-radius: 16px; padding: 40px; width: 100%; max-width: 380px; box-shadow: 0 4px 32px rgba(0,0,0,0.1); }
+.logo { text-align: center; margin-bottom: 28px; }
+.logo h1 { font-size: 20px; font-weight: 700; color: #185FA5; }
+.logo p { font-size: 13px; color: #64748b; margin-top: 4px; }
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px; }
+.field input { width: 100%; padding: 11px 14px; font-size: 15px; border: 1.5px solid #e2e8f0; border-radius: 8px; outline: none; font-family: inherit; transition: border-color 0.2s; }
+.field input:focus { border-color: #185FA5; }
+.btn { width: 100%; padding: 13px; background: #185FA5; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 4px; }
+.btn:hover { background: #0C447C; }
+.error { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 10px 14px; color: #dc2626; font-size: 13px; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <h1>Admin Panel</h1>
+    <p>Murojaatlar boshqaruvi</p>
+  </div>
+
+  {% if messages %}
+  {% for msg in messages %}
+  <div class="error">{{ msg }}</div>
+  {% endfor %}
+  {% endif %}
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="field">
+      <label>Login</label>
+      <input type="text" name="username" placeholder="Username" required autofocus>
+    </div>
+    <div class="field">
+      <label>Parol</label>
+      <input type="password" name="password" placeholder="••••••••" required>
+    </div>
+    <button type="submit" class="btn">Kirish</button>
+  </form>
+</div>
+</body>
+</html>

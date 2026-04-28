@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Murojaat #{{ lead.id }}</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f1f5f9; color: #1e293b; }
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: 220px; background: #0C447C; color: #fff; padding: 0; flex-shrink: 0; position: fixed; top: 0; left: 0; height: 100vh; }
+.sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.sidebar-logo h2 { font-size: 16px; font-weight: 700; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 14px; color: #B5D4F4; text-decoration: none; }
+.nav-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.sidebar-footer { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+.btn-logout { display: block; text-align: center; background: rgba(255,255,255,0.1); color: #fff; padding: 8px; border-radius: 6px; font-size: 13px; text-decoration: none; }
+.main { margin-left: 220px; flex: 1; padding: 28px 32px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #185FA5; text-decoration: none; font-size: 14px; margin-bottom: 20px; }
+.back:hover { text-decoration: underline; }
+.page-title { font-size: 22px; font-weight: 700; margin-bottom: 24px; }
+.grid { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
+
+.card { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 24px; }
+.card-title { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #374151; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; }
+
+.info-row { display: flex; padding: 10px 0; border-bottom: 1px solid #f8fafc; }
+.info-row:last-child { border-bottom: none; }
+.info-label { width: 130px; flex-shrink: 0; font-size: 13px; color: #64748b; }
+.info-value { font-size: 14px; font-weight: 500; }
+.info-value a { color: #185FA5; }
+.message-box { background: #f8fafc; border-radius: 8px; padding: 14px; font-size: 14px; color: #374151; line-height: 1.6; min-height: 60px; margin-top: 8px; }
+
+/* Status badge */
+.badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+.badge-new        { background: #fef2f2; color: #dc2626; }
+.badge-seen       { background: #f0f9ff; color: #0369a1; }
+.badge-processing { background: #fffbeb; color: #b45309; }
+.badge-done       { background: #f0fdf4; color: #16a34a; }
+.badge-cancelled  { background: #f8fafc; color: #64748b; }
+
+/* Form */
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; font-weight: 500; color: #64748b; margin-bottom: 5px; }
+.field select, .field textarea { width: 100%; padding: 9px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; }
+.field select:focus, .field textarea:focus { border-color: #185FA5; }
+.field textarea { resize: vertical; min-height: 90px; }
+.btn-save { width: 100%; padding: 11px; background: #185FA5; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn-save:hover { background: #0C447C; }
+.alert-success { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 10px 14px; color: #16a34a; font-size: 13px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><h2>Admin Panel</h2></div>
+    <nav style="padding: 12px 0;">
+      <a href="{% url 'admin_leads' %}" class="nav-item">📋 Murojaatlar</a>
+      <a href="/" class="nav-item" target="_blank">🌐 Saytni ko'rish</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="{% url 'admin_logout' %}" class="btn-logout">Chiqish</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <a href="{% url 'admin_leads' %}" class="back">← Orqaga</a>
+    <div class="page-title">Murojaat #{{ lead.id }} — {{ lead.name }}</div>
+
+    <div class="grid">
+      <!-- Chap: murojaat ma'lumotlari -->
+      <div>
+        <div class="card">
+          <div class="card-title">Ma'lumotlar</div>
+          <div class="info-row">
+            <span class="info-label">Ism</span>
+            <span class="info-value">{{ lead.name }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Telefon</span>
+            <span class="info-value"><a href="tel:{{ lead.phone }}">{{ lead.phone }}</a></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Email</span>
+            <span class="info-value"><a href="mailto:{{ lead.email }}">{{ lead.email }}</a></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Status</span>
+            <span class="info-value">
+              <span class="badge badge-{{ lead.status }}">{{ lead.get_status_display }}</span>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Yuborilgan</span>
+            <span class="info-value">{{ lead.created_at|date:"d.m.Y H:i" }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Yangilangan</span>
+            <span class="info-value">{{ lead.updated_at|date:"d.m.Y H:i" }}</span>
+          </div>
+          {% if lead.message %}
+          <div style="margin-top: 16px;">
+            <div style="font-size:13px; color:#64748b; margin-bottom:6px;">Xabar</div>
+            <div class="message-box">{{ lead.message }}</div>
+          </div>
+          {% endif %}
+          {% if lead.note %}
+          <div style="margin-top: 16px;">
+            <div style="font-size:13px; color:#64748b; margin-bottom:6px;">Admin eslatmasi</div>
+            <div class="message-box" style="background:#fffbeb;">{{ lead.note }}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- O'ng: status yangilash -->
+      <div>
+        <div class="card">
+          <div class="card-title">Status yangilash</div>
+          {% if messages %}
+          {% for msg in messages %}
+          <div class="alert-success">{{ msg }}</div>
+          {% endfor %}
+          {% endif %}
+          <form method="POST">
+            {% csrf_token %}
+            <div class="field">
+              <label>Status</label>
+              {{ form.status }}
+            </div>
+            <div class="field">
+              <label>Izoh / eslatma</label>
+              {{ form.note }}
+            </div>
+            <button type="submit" class="btn-save">Saqlash</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>
