@@ -1,10 +1,9 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Temir yo'l markaziy klinik kasalxonasi — Murojaat</title>
+<title>Biznes nomi — Murojaat</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -160,9 +159,9 @@ footer {
 <!-- HEADER -->
 <header>
   <div class="header-inner">
-    <a href="/" class="logo">Temir yo'l markaziy klinik kasalxonasi</a>
+    <a href="/" class="logo">Biznes nomi</a>
     <div class="header-right">
-      <a href="tel:+998712996302" class="header-phone">+998 71 2996302</a>
+      <a href="tel:+998901234567" class="header-phone">+998 90 123 45 67</a>
       <div class="lang-switcher">
         <button class="lang-btn active" data-lang="uz">UZ</button>
         <button class="lang-btn" data-lang="ru">RU</button>
@@ -248,6 +247,11 @@ footer {
         {{ form.message }}
       </div>
 
+      <!-- Honeypot - botlar uchun tuzoq, ko'rinmas -->
+      <div style="position:absolute; left:-9999px; top:-9999px; opacity:0; height:0; overflow:hidden;">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" value="">
+      </div>
+
       <button type="submit" class="btn-submit" id="submit-btn">
         Yuborish →
       </button>
@@ -264,13 +268,14 @@ footer {
   <div class="footer-inner">
     <div class="footer-grid">
       <div class="footer-col">
+        <h4>Biznes nomi</h4>
         <p class="footer-about-text">Professional xizmat va ishonchli hamkorlik. Sizning muvaffaqiyatingiz — bizning maqsadimiz.</p>
       </div>
       <div class="footer-col">
         <h4 class="footer-contact-title">Bog'lanish</h4>
-        <a href="tel:+998712996302">+998 71 2996302</a>
-        <a href="https://jd-klinika.uz/">jd-klinika.uz</a>
-        <a href="https://t.me/railwayhospital">Telegram: @railwayhospital</a>
+        <a href="tel:+998901234567">+998 90 123 45 67</a>
+        <a href="mailto:info@example.com">info@example.com</a>
+        <a href="https://t.me/username">Telegram: @username</a>
       </div>
       <div class="footer-col">
         <h4 class="footer-addr-title">Manzil</h4>
@@ -283,45 +288,220 @@ footer {
   </div>
 </footer>
 
-<script src="{% static 'js/lang.js' %}"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  // AJAX forma yuborish
-  var form = document.getElementById("lead-form");
-  if (!form) return;
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    var btn = document.getElementById("submit-btn");
-    btn.disabled = true;
-    btn.textContent = "Yuborilmoqda...";
+// ===== TIL TARJIMALARI =====
+const TRANSLATIONS = {
+  uz: {
+    nav_phone: '+998 90 123 45 67',
+    hero_title: 'Sizning muammoingizga eng tezkor yechim',
+    hero_text: 'Professional xizmat, ishonchli hamkorlik va sizga mos individual yondashuv.',
+    hero_btn: 'Murojaat qoldirish →',
+    feat1_title: 'Tez xizmat',
+    feat1_text: 'Murojaatlaringizga 24 soat ichida javob beramiz',
+    feat2_title: 'Ishonchli',
+    feat2_text: "Ma'lumotlaringiz xavfsiz saqlanadi",
+    feat3_title: 'Professional',
+    feat3_text: 'Tajribali mutaxassislar jamoasi',
+    form_title: 'Murojaat qoldiring',
+    form_sub: "Barcha maydonlarni to'ldiring, biz tez orada siz bilan bog'lanamiz.",
+    label_name: 'Ism *',
+    label_phone: 'Telefon *',
+    label_email: 'Email *',
+    label_msg: 'Xabar (ixtiyoriy)',
+    ph_name: 'Ismingiz',
+    ph_phone: '+998 __ ___ __ __',
+    ph_email: 'email@example.com',
+    ph_msg: 'Savolingiz yoki xabaringiz...',
+    btn_submit: 'Yuborish →',
+    success: "✅ Murojaatingiz qabul qilindi! Tez orada siz bilan bog'lanamiz.",
+    footer_about: "Professional xizmat va ishonchli hamkorlik. Sizning muvaffaqiyatingiz — bizning maqsadimiz.",
+    footer_contact: "Bog'lanish",
+    footer_address: 'Manzil',
+    footer_city: 'Toshkent shahri,
+Chilonzor tumani',
+    copyright: '© 2026 Biznes nomi. Barcha huquqlar himoyalangan.',
+  },
+  ru: {
+    nav_phone: '+998 90 123 45 67',
+    hero_title: 'Быстрое решение вашей проблемы',
+    hero_text: 'Профессиональный сервис, надёжное партнёрство и индивидуальный подход.',
+    hero_btn: 'Оставить заявку →',
+    feat1_title: 'Быстрый сервис',
+    feat1_text: 'Отвечаем на заявки в течение 24 часов',
+    feat2_title: 'Надёжно',
+    feat2_text: 'Ваши данные хранятся в безопасности',
+    feat3_title: 'Профессионально',
+    feat3_text: 'Команда опытных специалистов',
+    form_title: 'Оставьте заявку',
+    form_sub: 'Заполните все поля, мы свяжемся с вами в ближайшее время.',
+    label_name: 'Имя *',
+    label_phone: 'Телефон *',
+    label_email: 'Email *',
+    label_msg: 'Сообщение (необязательно)',
+    ph_name: 'Ваше имя',
+    ph_phone: '+998 __ ___ __ __',
+    ph_email: 'email@example.com',
+    ph_msg: 'Ваш вопрос или сообщение...',
+    btn_submit: 'Отправить →',
+    success: '✅ Ваша заявка принята! Мы свяжемся с вами в ближайшее время.',
+    footer_about: 'Профессиональный сервис и надёжное партнёрство.',
+    footer_contact: 'Контакты',
+    footer_address: 'Адрес',
+    footer_city: 'г. Ташкент,
+Чиланзарский район',
+    copyright: '© 2026 Название бизнеса. Все права защищены.',
+  },
+  en: {
+    nav_phone: '+998 90 123 45 67',
+    hero_title: 'The fastest solution to your problem',
+    hero_text: 'Professional service, reliable partnership and personalized approach.',
+    hero_btn: 'Leave a request →',
+    feat1_title: 'Fast service',
+    feat1_text: 'We respond to requests within 24 hours',
+    feat2_title: 'Reliable',
+    feat2_text: 'Your data is stored securely',
+    feat3_title: 'Professional',
+    feat3_text: 'Team of experienced specialists',
+    form_title: 'Leave a request',
+    form_sub: 'Fill in all fields, we will contact you soon.',
+    label_name: 'Name *',
+    label_phone: 'Phone *',
+    label_email: 'Email *',
+    label_msg: 'Message (optional)',
+    ph_name: 'Your name',
+    ph_phone: '+998 __ ___ __ __',
+    ph_email: 'email@example.com',
+    ph_msg: 'Your question or message...',
+    btn_submit: 'Submit →',
+    success: '✅ Your request has been received! We will contact you soon.',
+    footer_about: 'Professional service and reliable partnership.',
+    footer_contact: 'Contact',
+    footer_address: 'Address',
+    footer_city: 'Tashkent city,\nChilanzar district',
+    copyright: '© 2026 Business name. All rights reserved.',
+  },
+};
 
-    fetch("/", {
-      method: "POST",
-      headers: {"X-Requested-With": "XMLHttpRequest"},
-      body: new FormData(this),
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.success) {
-        form.style.display = "none";
-        document.getElementById("success-msg").style.display = "block";
-      } else {
-        btn.disabled = false;
-        btn.textContent = "Yuborish";
-        document.querySelectorAll(".field-error").forEach(function(el) { el.style.display = "none"; });
-        document.querySelectorAll(".field input, .field textarea").forEach(function(el) { el.classList.remove("error"); });
-        Object.entries(data.errors || {}).forEach(function(entry) {
-          var field = entry[0], errs = entry[1];
-          var input = document.getElementById("id_" + field);
-          if (input) {
-            input.classList.add("error");
-            var errEl = input.closest(".field").querySelector(".field-error");
-            if (errEl) { errEl.textContent = errs[0]; errEl.style.display = "block"; }
-          }
-        });
+function applyLang(lang) {
+  const t = TRANSLATIONS[lang];
+  if (!t) return;
+  localStorage.setItem('lang', lang);
+
+  // Hero
+  const h1 = document.querySelector('.hero h1');
+  const hp = document.querySelector('.hero p');
+  const hbtn = document.querySelector('.hero .btn-primary');
+  if (h1) h1.textContent = t.hero_title;
+  if (hp) hp.textContent = t.hero_text;
+  if (hbtn) hbtn.textContent = t.hero_btn;
+
+  // Features
+  const ftitles = document.querySelectorAll('.feature-title');
+  const ftexts  = document.querySelectorAll('.feature-text');
+  if (ftitles[0]) ftitles[0].textContent = t.feat1_title;
+  if (ftexts[0])  ftexts[0].textContent  = t.feat1_text;
+  if (ftitles[1]) ftitles[1].textContent = t.feat2_title;
+  if (ftexts[1])  ftexts[1].textContent  = t.feat2_text;
+  if (ftitles[2]) ftitles[2].textContent = t.feat3_title;
+  if (ftexts[2])  ftexts[2].textContent  = t.feat3_text;
+
+  // Form
+  const ftitle = document.querySelector('.form-title');
+  const fsub   = document.querySelector('.form-subtitle');
+  if (ftitle) ftitle.textContent = t.form_title;
+  if (fsub)   fsub.textContent   = t.form_sub;
+
+  // Labels
+  const labels = document.querySelectorAll('.field label');
+  const inputs = [
+    document.querySelector('[name=name]'),
+    document.querySelector('[name=phone]'),
+    document.querySelector('[name=email]'),
+    document.querySelector('[name=message]'),
+  ];
+  const labelKeys = ['label_name','label_phone','label_email','label_msg'];
+  const phKeys    = ['ph_name','ph_phone','ph_email','ph_msg'];
+  labels.forEach((el, i) => { if (labelKeys[i]) el.textContent = t[labelKeys[i]]; });
+  inputs.forEach((el, i) => { if (el && phKeys[i]) el.placeholder = t[phKeys[i]]; });
+
+  // Submit btn
+  const sbtn = document.querySelector('.btn-submit');
+  if (sbtn && !sbtn.disabled) sbtn.textContent = t.btn_submit;
+
+  // Success msg
+  const smsg = document.getElementById('success-msg');
+  if (smsg) smsg.textContent = t.success;
+
+  // Footer
+  const fabout   = document.querySelector('.footer-about-text');
+  const fcontact = document.querySelector('.footer-contact-title');
+  const faddr    = document.querySelector('.footer-addr-title');
+  const fcity    = document.querySelector('.footer-city');
+  const fcopy    = document.querySelector('.footer-bottom');
+  if (fabout)   fabout.textContent   = t.footer_about;
+  if (fcontact) fcontact.textContent = t.footer_contact;
+  if (faddr)    faddr.textContent    = t.footer_address;
+  if (fcity)    fcity.innerHTML      = t.footer_city.replace('\n','<br>');
+  if (fcopy)    fcopy.textContent    = t.copyright;
+}
+
+// Til tugmalari
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    applyLang(this.dataset.lang);
+  });
+});
+
+// Saqlangan tilni yuklash
+const savedLang = localStorage.getItem('lang') || 'uz';
+document.querySelector(`.lang-btn[data-lang="${savedLang}"]`)?.classList.add('active');
+document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+document.querySelector(`.lang-btn[data-lang="${savedLang}"]`)?.classList.add('active');
+applyLang(savedLang);
+
+// ===== AJAX FORMA =====
+document.getElementById('lead-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Yuborilmoqda...';
+
+  fetch('/', {
+    method: 'POST',
+    headers: {'X-Requested-With': 'XMLHttpRequest'},
+    body: new FormData(this),
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      this.style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Yuborish →';
+      // Xatolarni ko'rsatish
+      document.querySelectorAll('.field-error').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.field input, .field textarea').forEach(el => el.classList.remove('error'));
+      for (const [field, errs] of Object.entries(data.errors || {})) {
+        const input = document.getElementById('id_' + field);
+        if (input) {
+          input.classList.add('error');
+          const errEl = input.closest('.field').querySelector('.field-error');
+          if (errEl) { errEl.textContent = errs[0]; errEl.style.display = 'block'; }
+        }
       }
-    })
-    .catch(function() { btn.disabled = false; btn.textContent = "Yuborish"; });
+    }
+  })
+  .catch(() => { btn.disabled = false; btn.textContent = 'Yuborish →'; });
+});
+
+// Til tanlash
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
   });
 });
 </script>

@@ -18,6 +18,24 @@ from apps.leads.forms import LeadForm, LeadStatusForm
 
 def index(request):
     if request.method == 'POST':
+        # Honeypot — bot bu maydonni to'ldiradi, inson to'ldirmaydi
+        if request.POST.get('website', '').strip():
+            # Botga muvaffaqiyat ko'rsatamiz, lekin saqlamaymiz
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
+            return redirect('/?success=1')
+
+        # Rate limiting — bir IP dan 1 soatda max 5 ta murojaat
+        ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', '')).split(',')[0].strip()
+        from django.core.cache import cache
+        cache_key = f"lead_limit_{ip}"
+        count = cache.get(cache_key, 0)
+        if count >= 5:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'errors': {'phone': ['Juda kop urinish. Biroz kuting.']}})
+            return redirect('/?success=1')
+        cache.set(cache_key, count + 1, 3600)
+
         form = LeadForm(request.POST)
         if form.is_valid():
             form.save()
